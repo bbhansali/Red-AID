@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RED AID - Discard old bags</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                'type': "POST",
+                'url': 'http://localhost:5000/getdiscardedbags',
+                'data': {
+                    bid: localStorage.getItem('bid')
+                },
+                success: function (obj) {
+                    data = JSON.parse(obj);
+                    code = "";
+                    for (let i = 0; i < data.length; i++) {
+                        code += '<tr>';
+                        code += '<td>'+data[i][0]+'</td>';
+                        code += '<td>'+data[i][3]+'</td>';
+                        code += '<td>'+data[i][5]+'</td>';
+                        code += '</tr>';
+                    }
+                    document.getElementById('table-content').innerHTML = code;
+                }
+            });
+        });
+    </script>
+    <style>
+        #main-heading{
+            text-align: center;
+            font-size: 2em;
+            margin-top: 30px;
+            margin-bottom: 30px;;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">RED AID</a>
+    </nav>
+    <h1 class="display-4" id="main-heading">DISCARD THESE BAGS</h1>
+    <div class="container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">I ID</th>
+                    <th scope="col">Blood Group</th>
+                    <th scope="col">Expiry Date</th>
+                </tr>
+            </thead>
+            <tbody id="table-content">
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

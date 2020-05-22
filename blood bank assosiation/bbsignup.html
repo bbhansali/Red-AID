@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RED AID - Sign Up</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <style>
+        #signup-heading {
+            text-align: center;
+            font-size: 2em;
+            margin: 20px 0px 70px 0px;
+        }
+
+        #signup-heading-2 {
+            text-align: center;
+            font-size: 2em;
+            margin: 20px 0px 20px 0px;
+        }
+
+        #signup-box {
+            padding: 20px;
+            background-color: #d5d5d5;
+            box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #inventory-management-box {
+            margin-bottom: 30px;
+            background-color: #d5d5d5;
+            box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        #helper-text {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #signup-success-btn {
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+    </style>
+    <script>
+        function addbank() {
+            $.ajax({
+                type: 'POST',
+                url: ' http://127.0.0.1:5000/addbloodbank',
+                data: $('#signup-box :input'),
+                success: function (obj) {
+                    if(obj == 'false')
+                        alert("Incorrect Login ID or AuthKey");
+                    else{
+                        window.location.href = 'index.html';
+                    }
+                }
+            });
+        }
+        $(document).ready(function(){
+            console.log($('#signup-box :input').serializeArray());
+        });
+        navigator.geolocation.getCurrentPosition(showPosition);
+        function showPosition(pos){
+            document.getElementById('bb-lat').value = pos.coords.latitude;
+            document.getElementById('bb-lon').value = pos.coords.longitude;
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">RED AID</a>
+    </nav>
+    <h1 class="display-4" id="signup-heading">Blood Bank Association - Sign up</h1>
+    <div class="container" id="signup-box">
+        <div class="form-row">
+            <div class="form-group col-sm-6">
+                <label for="bb-login-id">Login ID</label>
+                <input id="bb-login-id" class="form-control" type="text" name="bb-login-id"
+                    placeholder="Enter Login ID">
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="bb-name">Blood Bank Name</label>
+                <input id="bb-name" class="form-control" type="text" name="bb-name" placeholder="Enter Blood Bank Name">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-sm-6">
+                <label for="address-line-1">Address Line 1</label>
+                <input id="address-line-1" class="form-control" type="text" name="address-line-1"
+                    placeholder="Enter Address line 1">
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="address-line-2">Address Line 2</label>
+                <input id="address-line-2" class="form-control" type="text" name="address-line-2"
+                    placeholder="Enter Address line 2">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-sm-6">
+                <label for="bb-password">Create Password</label>
+                <input id="bb-password" class="form-control" type="password" name="bb-password"
+                    placeholder="Enter Password">
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="bb-password2">Re-enter Password</label>
+                <input id="bb-password2" class="form-control" type="password" name="bb-password2"
+                    placeholder="Re-Enter Password">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-sm-4">
+                <label for="bb-email">Email ID</label>
+                <input id="bb-email" class="form-control" type="text" name="bb-email" placeholder="Enter Email ID">
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="bb-phone">Phone Number</label>
+                <input id="bb-phone" class="form-control" type="number" name="bb-phone"
+                    placeholder="Enter Phone Number">
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="bb-authkey">Auth Key</label>
+                <input id="bb-authkey" class="form-control" type="text" name="bb-authkey" placeholder="Enter Auth Key">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-sm-6">
+                <label for="bb-lat">Latitude</label>
+                <input id="bb-lat" class="form-control" type="text" name="bb-lat" disabled>
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="bb-lon">Longitude</label>
+                <input id="bb-lon" class="form-control" type="text" name="bb-lon" disabled>
+            </div>
+        </div>
+    </div>
+    <!-- <h1 class="display-4" id="signup-heading-2">Inventory Management</h1>
+    <p class="lead" id="helper-text">Enter number of units of blood currently present in the blood bank, to generate QR
+        codes for each bag of blood to be kept track of.</p>
+    <div class="container" id="inventory-management-box">
+        <div class="form-row">
+            <div class="form-group col-sm-3">
+                <label for="ap">A+</label>
+                <input id="ap" class="form-control" type="number" name="ap" placeholder="Count" value="0">
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="an">A-</label>
+                <input id="an" class="form-control" type="number" name="an" placeholder="Count" value="0">
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="bp">B+</label>
+                <input id="bp" class="form-control" type="number" name="bp" placeholder="Count" value="0">
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="bn">B-</label>
+                <input id="bn" class="form-control" type="number" name="bn" placeholder="Count" value="0">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-sm-3">
+                <label for="op">O+</label>
+                <input id="op" class="form-control" type="number" name="op" placeholder="Count" value="0">
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="on">O-</label>
+                <input id="on" class="form-control" type="number" name="on" placeholder="Count" value="0">
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="abp">AB+</label>
+                <input id="abp" class="form-control" type="number" name="abp" placeholder="Count" value="0">
+            </div>
+            <div class="form-group col-sm-3">
+                <label for="abn">AB-</label>
+                <input id="abn" class="form-control" type="number" name="abn" placeholder="Count" value="0">
+            </div>
+        </div>
+    </div> -->
+    <div class="container">
+        <button class="btn btn-success" id="signup-success-btn" onclick="addbank()">Submit</button>
+    </div>
+</body>
+
+</html>

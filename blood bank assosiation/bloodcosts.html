@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RED AID - Blood Bank Blood Costs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <style>
+        #main-heading {
+            font-size: 2em;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        #blood-costs-box {
+            padding: 10px 120px;
+            margin-top: 40px;
+        }
+
+        .each-box label {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .each-box>div {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .table-heading {
+            font-size: 1.2em;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        input[type="number"]::placeholder {
+            /* Firefox, Chrome, Opera */
+            text-align: center;
+        }
+
+        input[type="number"] {
+            /* Firefox, Chrome, Opera */
+            text-align: center;
+        }
+        #update-cost-btn{
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+    </style>
+    <script>
+        function updatecosts(){
+            $.ajax({
+                'type' : 'POST',
+                'url' : 'http://localhost:5000/updatecosts',
+                'data': $('#blood-costs-box :input').serialize() + "&bid=" + localStorage.getItem('bid'),
+                success: function(obj){
+                    if(obj == "true"){
+                        window.location.reload();
+                    }
+                    else{
+                        alert("error while updating");
+                    }
+                }
+            }); 
+        }
+        $(document).ready(function () {
+            $.ajax({
+                'type': "POST",
+                'url': 'http://localhost:5000/getbloodcost',
+                data: {
+                    bid: localStorage.getItem('bid'),
+                },
+                success: function (obj) {
+                    data = JSON.parse(obj);
+                    if (data.length != 0) {
+                        price_data = Array();
+                        for (let i = 0; i < data.length; i++) {
+                            price_data[data[i][1]] = data[i][2];
+                        }
+                        for(key in price_data){
+                            $('#'+key).val(price_data[key]);
+                        }
+                    }
+                }
+            });
+        }); 
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">RED AID</a>
+    </nav>
+    <h1 class="display-4" id="main-heading">Blood Costs</h1>
+    <div class="container" id="blood-costs-box">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1 class="display-4 table-heading">BLOOD GROUP</h1>
+            </div>
+            <div class="col-sm-6">
+                <h1 class="display-4 table-heading">COST</h1>
+            </div>
+        </div>
+        <div class="form-group row each-box">
+            <label for="ap" class="col-sm-6 col-form-label">A+</label>
+            <div class="col-sm-6">
+                <input type="number" id="ap" name="ap" placeholder="Enter cost for one unit"
+                    class="form-control-plaintext" value=0>
+            </div>
+        </div>
+        <div class="form-group row each-box">
+            <label for="an" class="col-sm-6 col-form-label">A-</label>
+            <div class="col-sm-6">
+                <input type="number" id="an" name="an" placeholder="Enter cost for one unit"
+                    class="form-control-plaintext" value=0>
+            </div>
+        </div>
+        <div class="form-group row each-box">
+            <label for="bp" class="col-sm-6 col-form-label">B+</label>
+            <div class="col-sm-6">
+                <input type="number" id="bp" name="bp" placeholder="Enter cost for one unit"
+                    class="form-control-plaintext" value=0>
+            </div>
+        </div>
+        <div class="form-group row each-box">
+            <label for="bn" class="col-sm-6 col-form-label">B-</label>
+            <div class="col-sm-6">
+                <input type="number" id="bn" name="bn" placeholder="Enter cost for one unit"
+                    class="form-control-plaintext" value=0>
+            </div>
+        </div>
+        <div class="form-group row each-box">
+            <label for="op" class="col-sm-6 col-form-label">O+</label>
+            <div class="col-sm-6">
+                <input type="number" id="op" name="op" placeholder="Enter cost for one unit"
+                    class="form-control-plaintext" value=0>
+            </div>
+        </div>
+        <div class="form-group row each-box">
+            <label for="on" class="col-sm-6 col-form-label">O-</label>
+            <div class="col-sm-6">
+                <input type="number" id="on" name="on" placeholder="Enter cost for one unit"
+                    class="form-control-plaintext" value=0>
+            </div>
+        </div>
+        <div class="form-group row each-box">
+            <label for="abp" class="col-sm-6 col-form-label">AB+</label>
+            <div class="col-sm-6">
+                <input type="number" id="abp" name="abp" placeholder="Enter cost for one unit"
+                    class="form-control-plaintext" value=0>
+            </div>
+        </div>
+        <div class="form-group row each-box">
+            <label for="abn" class="col-sm-6 col-form-label">AB-</label>
+            <div class="col-sm-6">
+                <input type="number" id="abn" name="abn" placeholder="Enter cost for one unit"
+                    class="form-control-plaintext" value=0>
+            </div>
+        </div>
+        <button class="btn btn-danger" id="update-cost-btn" type="button" onclick="updatecosts()">Update Costs</button>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        RED AID - Donation Requests
+    </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        function approve(element){
+            var did = element.id;
+            console.log(did);
+            $.ajax({
+                'type': "POST",
+                'url': 'http://localhost:5000/approvedonreq',
+                'data' : {
+                    'did' : did
+                },
+                success: function(obj){
+                    if(obj == "true"){
+                        console.log(obj);
+                        window.location.reload();
+                    }
+                }
+
+            });
+        }
+        function cancel(element){
+            var did = element.id;
+            $.ajax({
+                'type': "POST",
+                'url': 'http://localhost:5000/canceldonreq',
+                'data' : {
+                    'did' : did
+                },
+                success: function(obj){
+                    if(obj == "true"){
+                        console.log(obj);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+        function viewRequests() {
+            $.ajax({
+                'type': "POST",
+                'url': 'http://localhost:5000/viewrequests',
+                'data': {
+                    'bid': localStorage.getItem('bid')
+                },
+                success: function (obj) {
+                    console.log(obj);
+                    data = JSON.parse(obj);
+                    code = "";
+                    for (let i = 0; i < data.length; i++) {
+                        code += `
+                            <div class="individual-data row">
+                                <div class="col-8">
+                                    <span class="donor-name"><b>`+ data[i][1].toUpperCase() + `</b> </span><span class="blood-group"> &nbsp;` + data[i][2] + `</span><br>
+                                    <span class="ano">Aadhar No: `+ data[i][3] + `</span><br>
+                                    <span class="re-dt">`+ data[i][4].split(" ")[0] + `</span>
+                                </div>
+                                <div class="col-4">
+                                    <button class="btn btn-danger donor-btns" id="`+ data[i][0] + `" onclick="approve(this)">Approve</button>
+                                    <br>
+                                    <button class="btn btn-danger donor-btns" id="`+ data[i][0] + `" onclick="cancel(this)">Cancel</button>
+                                </div>
+                            </div>
+                            `;
+                    }
+                    document.getElementById('donreq-box').innerHTML = code;
+                }
+            });
+        }
+        $(document).ready(function () {
+            viewRequests();
+            console.log(localStorage.getItem('bid'));
+            setInterval(function () {
+                viewRequests();
+            }, 100000);
+        });
+    </script>
+    <style>
+        #main-heading {
+            text-align: center;
+            font-size: 2em;
+            margin-top: 20px;
+        }
+
+        .blood-group {
+            font-size: 1.7em;
+            font-weight: 200;
+            text-align: center;
+            margin: 7px 0px;
+        }
+
+        .donor-name {
+            font-size: 1.6em;
+            font-family: Helvetica, sans-serif;
+        }
+
+        .ano {
+            font-size: 1.2em;
+            font-family: Helvetica, sans-serif;
+        }
+
+        .donor-btns {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .req-dt {
+            font-size: 1.6em;
+            font-family: Helvetica, sans-serif;
+        }
+
+        #donreq-box {
+            padding: 10px 200px;
+        }
+
+        .individual-data {
+            background-color: seashell;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">RED AID</a>
+    </nav>
+    <h1 class="display-4" id="main-heading">View Donation Requests</h1>
+    <div class="container" id="donreq-box">
+    </div>
+</body>
+
+</html>
