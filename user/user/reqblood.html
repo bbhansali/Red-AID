@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RED AID - Request blood</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:5000/getallbanks",
+                data:{},
+                success: function(obj){
+                    console.log(obj);
+                    data = JSON.parse(obj);
+                    code = `<label for="bloodbanks">Choose a blood bank</label>
+                    <select class="form-control" id="bloodbanks" name="bloodbanks">`;
+                    for (let i = 0; i < data.length; i++) {
+                        code +=`
+                        <option>`+data[i][0]+`</option>
+                        `;          
+                    }
+                    code += `</select>`;
+                    document.getElementById('banknames').innerHTML = code;
+                }
+            });
+        });
+        function requestblood(){
+            $.ajax({
+                type: "POST",
+                url:  "http://localhost:5000/requestblood",
+                data: {
+                    'bgrp': $("#bgrp").val(),
+                    'noofunits': $('#noofunits').val(),
+                    'patientname' : $('#patientname').val(),
+                    'patientrelation' : $('#patientrelation').val(),
+                    'purpose' : $('#purpose').val(),
+                    'bank' : $('#bloodbanks').val(),
+                    'uid': localStorage.getItem('uid')   
+                },
+                success: function(obj){
+                    if(obj.startsWith("false")){
+                        num = obj.split(" ")[1];
+                        alert("Only "+ num+ " units available");
+                    }
+                    else
+                        alert('confirmed')
+                }
+            });
+        }
+    </script>
+    <style>
+        #main-heading{
+            text-align: center;
+            font-size: 2.4em;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        #req-box{
+            margin-top: 30px;
+            padding: 30px;
+            background-color: #f5f5f5;
+            box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.1);
+        }
+        #submit-btn{
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">RED AID</a>
+    </nav>
+    <h1 class="display-4" id="main-heading">Request Blood</h1>
+    <div class="container" id="req-box">
+        <div class="form-row">
+            <div class="form-group col-sm-6">
+                <label for="bgrp">Choose Blood Group</label>
+                <select name="bgrp" id="bgrp" class="form-control">
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B_</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="noofunits">Number of Units</label>
+                <input id="noofunits" class="form-control" type="number" name="noofunits" placeholder="Enter no of Units">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-sm-6">
+                <label for="patientname">Patient Name</label>
+                <input id="patientname" class="form-control" type="text" name="patientname" placeholder="Enter Patient Name">
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="patientrelation">Patient Relation</label>
+                <input id="patientrelation" class="form-control" type="text" name="patientname" placeholder="Enter Patient Relation">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-sm-6">
+                <label for="purpose">Purpose</label>
+                <input id="purpose" class="form-control" type="text" name="purpose" placeholder="Enter the reason to request blood">
+            </div>
+            <div class="form-group col-sm-6" id="banknames">
+
+            </div>
+        </div>
+
+        <button class="btn btn-outline-danger" id="submit-btn" type="button" onclick="requestblood()">Submit</button>
+    </div>
+</body>
+
+</html>

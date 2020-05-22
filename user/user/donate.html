@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RED AID -Donate</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <style>
+        
+    </style>
+    <script>
+        function raiserequest(){
+            $.ajax({
+                'type': "POST",
+                'url':'http://127.0.0.1:5000/raisedonreq',
+                'data':{
+                    'uid' : localStorage.getItem("uid"),
+                    'bid' : $(".bbank").val(),
+                },
+                success: function(obj){
+                    if(obj == "true"){
+                        alert("Request Raised");
+                    }
+                }
+            });
+        }
+        $(document).ready(function () {
+            navigator.geolocation.getCurrentPosition(showPosition);
+            function showPosition(pos) {
+                $.ajax({
+                    type: "POST",
+                    url: 'http://127.0.0.1:5000/getclosestbanks',
+                    data: {
+                        'lat': pos.coords.latitude,
+                        'lon': pos.coords.longitude
+                    },
+                    success: function(obj){
+                        console.log(obj);
+                        data = JSON.parse(obj);
+                        console.log(data);
+                        code = `<h1 class="display-4" style = "font-size:1.4em;">Choose a blood Bank</h1>`;
+                        for (let i = 0; i < data.length; i++) {
+                            console.log(data[i][0]);
+                            code += `
+                            <div class="form-check" style="margin-top: 20px;">
+                                <input id="`+data[i][0]+`" class="form-check-input bbank" type="radio" name="bloodbank" value="`+data[i][0]+`">
+                                <label for="`+data[i][0]+`" class="form-check-label check-label">
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <h1 class="display-4" style="font-size: 1.8em; line-height: 25px;">`+data[i][1]+`</h1><span style="font-size: 0.9em;">`+data[i][6]+","+data[i][7]+`</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <span style="text-align: center; font-size: 2em;">`+data[i][10]+` KM</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            `;
+                        }
+                        document.getElementById("bloodbank-list").innerHTML = code;
+                    }
+                });
+            }
+        });
+    </script>
+    <style>
+        #main-heading{
+            text-align: center;
+            font-size: 2em;
+            margin-top: 20px;
+            margin-bottom: 40px;;
+        }
+        .check-label{
+            width: 100%;
+        }
+        #request-button{
+            width: 100%;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">RED AID</a>
+    </nav>
+    <h1 class="display-4" id="main-heading">Raise a Donation Request</h1>
+    <div class="container" id="donation-request-box">
+
+        <div id="bloodbank-list">
+
+        </div>
+        <!-- <div class="form-check" style="margin-top: 20px;">
+            <input id="bloodbank1" class="form-check-input" type="radio" name="" value="true">
+            <label for="bloodbank1" class="form-check-label" style="width: 100%;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-7">
+                            <h1 class="display-4" style="font-size: 1.8em; line-height: 25px;">ABC Blood Bank</h1><span style="font-size: 0.9em;">Nagar, Bangalore</span>
+                        </div>
+                        <div class="col-4">
+                            <span style="text-align: center; font-size: 2em;">24.3 KM</span>
+                        </div>
+                    </div>
+                </div>
+            </label>
+        </div> -->
+    </div>
+    <div class="container">
+        <button class="btn btn-danger" id="request-button" onclick="raiserequest()">Raise Request</button>
+    </div>
+</body>
+
+</html>

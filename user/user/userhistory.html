@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User HomePage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                'type': 'POST',
+                'url': 'http://localhost:5000/userhistory',
+                'data': {
+                    'uid': localStorage.getItem('uid')
+                },
+                success: function (obj) {
+                    code = "";
+                    data = JSON.parse(obj);
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i].length == 8) {
+                            code += "<tr>";
+                            code += "<td>" + data[i][4].slice(0, data[i][4].length - 7) + "</td>";
+                            code += "<td>Donating</td>";
+                            code += "<td>" + data[i][3] + "</td>";
+                            code += "<td> 1 Unit </td>";
+                            if (data[i][5] == 0 && data[i][7] == 1)
+                                code += "<td>Cancelled</td>";
+                            if (data[i][5] == 1 && data[i][7] == 1)
+                                code += "<td>Successful</td>";
+                            if (data[i][5] == 0 && data[i][7] == 0)
+                                code += "<td>Pending</td>";
+                            code +="</tr>";
+                        }
+                        else{
+                            code += "<tr>";
+                            code += "<td>" + data[i][4].slice(0, data[i][4].length - 7)+ "</td>";
+                            code += "<td>Taking</td>";
+                            code += "<td>" + data[i][3] + "</td>";
+                            code += "<td>"+data[i][8]+" Unit(s) </td>";
+                            if (data[i][5] == 0 && data[i][7] == 1)
+                                code += "<td>Cancelled</td>";
+                            if (data[i][5] == 1 && data[i][7] == 1)
+                                code += "<td>Successful</td>";
+                            if (data[i][5] == 0 && data[i][7] == 0)
+                                code += "<td>Pending</td>";
+                            code +="</tr>";
+                        }
+                    }
+                    document.getElementById('table-content').innerHTML = code;
+                }
+
+            });
+        });
+    </script>
+    <style>
+        #main-heading{
+            text-align: center;
+            font-size: 2em;
+            margin-top: 30px;
+            margin-bottom: 30px;;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">RED AID</a>
+        <button class="btn btn-outline-success">Logout</button>
+    </nav>
+    <h1 class="display-4" id="main-heading">History</h1>
+    <div class="container" id="history-container">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Donating/Taking</th>
+                    <th scope="col">Blood Group</th>
+                    <th scope="col">No of Units</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody id="table-content">
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

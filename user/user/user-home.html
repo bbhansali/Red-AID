@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User HomePage</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                'type': "POST",
+                "url": 'http://localhost:5000/getmaxdate',
+                'data': {
+                    'uid': localStorage.getItem('uid'),
+                },
+                success: function (obj) {
+                    var d = new Date(obj);
+                    var today = new Date();
+                    if (today < d) {
+                        $("#next-donation-date").text("on " + d.toDateString());
+                        $('#donate-box').addClass("disabledbutton");
+                    }
+                    else {
+                        $("#next-donation-date").text("NOW");
+                    }
+                    console.log(d);
+                }
+            });
+        });
+    </script>
+    <style>
+        .homepage-boxes {
+            height: 250px;
+            background-color: darkred;
+        }
+
+        .disabledbutton {
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        .main-boxes {
+            margin-top: 30px;
+            padding: 0px 20px;
+        }
+
+        .homepage-boxes:hover {
+            cursor: pointer;
+        }
+
+        #main-heading {
+            text-align: center;
+            font-size: 2em;
+            margin-top: 30px;
+        }
+
+        .mainbox-text {
+            font-size: 2.1em;
+            padding-top: 95px;
+            color: lightgrey;
+            text-align: center;
+            font-weight: 400;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #next-donation-date {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        .sub-heads {
+            font-size: 1.4em;
+            font-weight: 400;
+        }
+
+        .lead {
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">RED AID</a>
+        <button class="btn btn-outline-success">Logout</button>
+    </nav>
+    <h1 class="display-4" id="main-heading">Welcome</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4 main-boxes" id="donate-box">
+                <div class="homepage-boxes" onclick="window.location.href = 'donate.html'">
+                    <h1 class="display-4 mainbox-text">DONATE</h1>
+                </div>
+            </div>
+            <div class="col-sm-4 main-boxes">
+                <div class="homepage-boxes" onclick="window.location.href = 'reqblood.html'">
+                    <h1 class="display-4 mainbox-text">REQUEST</h1>
+                </div>
+            </div>
+            <div class="col-sm-4 main-boxes">
+                <div class="homepage-boxes" onclick="window.location.href = 'userhistory.html'">
+                    <h1 class="display-4 mainbox-text">HISTORY</h1>
+                </div>
+            </div>
+            <div class="col-sm-4 main-boxes">
+                <div class="homepage-boxes">
+                    <h1 class="display-4 mainbox-text">PERSONAL INFO</h1>
+                </div>
+            </div>
+            <div class="col-sm-4 main-boxes">
+                <div class="homepage-boxes">
+                    <h1 class="display-4 mainbox-text">DONATE AGAIN <br><span id="next-donation-date"></span></h1>
+                </div>
+            </div>
+            <div class="col-sm-4 main-boxes">
+                <div class="homepage-boxes">
+                    <h1 class="display-4 mainbox-text">VIEW BLOOD BANKS</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" style="margin-top: 40px;">
+        <h1 class="display-4 sub-heads">Blood Donation Process</h1>
+        <p class="lead">It is always good to plan blood donation in advance. Consult your doctor before donating blood
+            if there are any health issues or concerns. It is always good to have
+            healthy diet weeks before the donation. On the day of donation, make sure you are
+            well hydrated, so keep drinking plenty of fluids. One should wear comfortable clothes
+            during the donation process. In case you are undergoing any treatment or
+            medication, it is advisable to inform the blood bank/clinic/hospital where you are
+            donating blood.</p>
+        <br>
+        <h1 class="display-4 sub-heads">Benefits of Blood Donation</h1>
+        <p class="lead">Donating blood has benefits for your emotional and physical health.
+            According to a report by the Mental Health Foundation, helping others can:reduce stress, improve your
+            emotional well-being
+            ,benefit your physical health
+            , help get rid of negative feelings
+            , provide a sense of belonging and reduce isolation. Research has found further evidence of the health
+            benefits that come
+            specifically from donating blood.</p>
+        <h1 class="display-4 sub-heads">PREVENTS HEMOCHROMATOSIS</h1>
+        <p class="lead">Health benefits of blood donation include reduced risk of hemochromatosis.
+            Hemochromatosis is a health condition that arises due to excess absorption of iron
+            by the body. This may be inherited or may be caused due to alcoholism, anemia or
+            other disorders. Regular blood donation may help in reducing iron overload. Make
+            sure that the donor meets the standard blood donation eligibility criteria.</p>
+
+        <h1 class="display-4 sub-heads">ANTI-CANCER BENEFITS</h1>
+        <p class="lead">Blood donation helps in lowering the risk of cancer. By donating blood the iron stores
+            in the body are maintained at healthy levels. A reduction in the iron level in the body
+            is linked with low cancer risk.</p>
+        <h1 class="display-4 sub-heads">MAINTAINS HEALTHY HEART &amp; LIVER</h1>
+        <p class="lead">Blood donation is beneficial in reducing the risk of heart and liver ailments caused by
+            the iron overload in the body. Intake of iron-rich diet may increase the iron levels in
+            the body, and since only limited proportions can be absorbed, excess iron gets
+            stored in heart, liver, and pancreas. This, in turn, increases the risk of cirrhosis, liver
+            failure, damage to the pancreas, and heart abnormalities like irregular heart rhythms.
+            Blood donation helps in maintaining the iron levels and reduces the risk of various
+            health ailments.</p>
+            <h1 class="display-4 sub-heads">WEIGHT LOSS</h1>
+        <p class="lead">Regular blood donation reduces the weight of the donors. This is helpful to those
+            who are obese and are at higher risk of cardiovascular diseases and other health
+            disorders. However, blood donation should not be very frequent and you may consult
+            your doctor before donating blood to avoid any health issues.</p>
+
+    </div>
+</body>
+
+</html>

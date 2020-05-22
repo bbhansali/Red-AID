@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Red Aid</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+		integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+		integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+		crossorigin="anonymous"></script>
+	<style type="text/css">
+		.intro-btns {
+			width: 100%;
+			border-radius: 10px;
+			margin-top: 40px;
+			height: 50px
+		}
+
+		#intro-btns-box {
+			margin-top: 100px;
+		}
+
+		#signup-submit-btn {
+			width: 100%;
+		}
+
+		#main-heading {
+			margin: 20px 0px 10px 0px;
+			font-size: 3em;
+			text-align: center;
+			color: #858585;
+		}
+	</style>
+	<script type="text/javascript">
+		function adduser() {
+			$.ajax({
+				type: 'POST',
+				url: ' http://127.0.0.1:5000/adduser',
+				data: $('#signup-modal :input, #signup-modal :selected'),
+				success: function (obj) {
+					if(obj == "false aadhaar")
+						alert("Enter correct Aadhaar card number");
+					if (obj == 'false')
+						alert("Error While Registering, try later");
+					else {
+						window.location.href = 'index.html';
+					}
+				}
+			});
+		}
+		function verifyuser(){
+			$.ajax({
+				type: 'POST',
+				url: ' http://127.0.0.1:5000/verifyuser',
+				data: $('#login-modal :input'),
+				success: function (obj) {
+					if (obj == 'false')
+						alert("Incorrect Email ID and Password");
+					else {
+						uid = obj.split(" ")[1];
+						localStorage.setItem("uid", uid);
+						window.location.href = 'user-home.html';
+					}
+				}
+			});
+		}
+		$(document).ready(function () {
+			console.log($('#signup-modal :input, #signup-modal :selected'));
+		});
+	</script>
+</head>
+
+<body>
+	<div class="modal fade" id="signup-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Sign Up</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-row">
+						<div class="form-group col-sm-6">
+							<label>Name</label>
+							<input type="text" name="signup-name" id="signup-name" class="form-control"
+								placeholder="Enter Name" required>
+						</div>
+						<div class="form-group col-sm-6">
+							<label>Email ID</label>
+							<input type="text" name="signup-emailid" id="signup-emailid" class="form-control"
+								placeholder="Enter Email ID" required>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-sm-6">
+							<label>Address Line 1</label>
+							<input type="text" name="signup-address-1" id="signup-address-1" class="form-control"
+								placeholder="Address Line 1" required>
+						</div>
+
+						<div class="form-group col-sm-6">
+							<label>Address Line 1</label>
+							<input type="text" name="signup-address-2" id="signup-address-2" class="form-control"
+								placeholder="Address Line 2" required>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-sm-6">
+							<label>Date of Birth</label>
+							<input type="date" name="signup-dob" id="signup-dob" class="form-control"
+								placeholder="Enter Date of Birth" required>
+						</div>
+						<div class="form-group col-sm-6">
+							<label>Phone Number</label>
+							<input type="number" name="signup-phone" id="signup-phone" class="form-control"
+								placeholder="Enter Phone Number" required>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-sm-6">
+							<label>Choose Blood Group</label>
+							<select class="form-control" name="signup-bgroup" id="signup-bgroup">
+								<option>A+</option>
+								<option>A-</option>
+								<option>B+</option>
+								<option>B-</option>
+								<option>O+</option>
+								<option>O-</option>
+								<option>AB+</option>
+								<option>AB-</option>
+							</select>
+						</div>
+						<div class="form-group col-sm-6">
+							<label>Enter Aadhaar Number</label>
+							<input type="number" name="signup-ano" id="signup-ano" class="form-control"
+								placeholder="Enter 16 Digit Aadhaar Number" required>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-sm-6">
+							<label>Create Password</label>
+							<input type="password" name="signup-pass" id="signup-pass" class="form-control"
+								placeholder="Enter Password" required>
+						</div>
+						<div class="form-group col-sm-6">
+							<label>Re-enter Password</label>
+							<input type="password" name="signup-repass" id="signup-repass" class="form-control"
+								placeholder="Re-enter Password" required>
+						</div>
+					</div>
+					<button class="btn btn-outline-danger" id="signup-submit-btn" type="button" onclick="adduser()">Sign Up</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Login</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="login-email">Email ID</label>
+						<input id="login-email" class="form-control" type="text" name="login-email"
+							placeholder="Enter Email ID">
+					</div>
+					<div class="form-group">
+						<label for="login-password">Enter Password</label>
+						<input id="login-password" class="form-control" type="password" name="login-password"
+							placeholder="Enter Password">
+					</div>
+					<button class="btn btn-outline-danger" id="signup-submit-btn" type="button" onclick="verifyuser()">Login</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	<nav class="navbar navbar-light bg-light">
+		<a class="navbar-brand" href="#">RED AID</a>
+	</nav>
+	<h1 class="display-4" id="main-heading">USER PORTAL</h1>
+	<div class="container-fluid">
+		<div class="container" id="intro-btns-box">
+			<button class="btn btn-danger intro-btns" data-toggle="modal" data-target="#login-modal">Login</button>
+			<button class="btn btn-danger intro-btns" data-toggle="modal" data-target="#signup-modal">Sign Up</button>
+		</div>
+	</div>
+</body>
+
+</html>
